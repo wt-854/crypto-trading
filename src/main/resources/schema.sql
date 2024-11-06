@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS price (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    crypto_pair VARCHAR(255) NOT NULL,
+    bid_price DECIMAL(19, 4) NOT NULL,
+    ask_price DECIMAL(19, 4) NOT NULL,
+    timestamp TIMESTAMP NOT NULL
+);
+
