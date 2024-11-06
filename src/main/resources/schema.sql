@@ -18,3 +18,12 @@ INSERT INTO crypto_user (id, username, usdt_balance, btcusdt_balance, ethusdt_ba
 INSERT INTO crypto_user (id, username, usdt_balance, btcusdt_balance, ethusdt_balance) VALUES (2, 'DICK', 50000.00, 0.00, 0.00);
 INSERT INTO crypto_user (id, username, usdt_balance, btcusdt_balance, ethusdt_balance) VALUES (3, 'HARRY', 50000.00, 0.00, 0.00);
 
+CREATE TABLE IF NOT EXISTS transaction (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    crypto_pair VARCHAR(255) NOT NULL,
+    amount DECIMAL(19, 4) NOT NULL,
+    price DECIMAL(19, 4) NOT NULL,
+    transaction_type VARCHAR(10) CHECK (transaction_type IN ('BUY', 'SELL')) NOT NULL,
+    timestamp TIMESTAMP NOT NULL
+);
