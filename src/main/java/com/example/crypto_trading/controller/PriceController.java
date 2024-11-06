@@ -22,7 +22,6 @@ public class PriceController {
 	@GetMapping("/{cryptoPair}")
 	public Price getLatestPrice(@PathVariable @ValidCryptoPair String cryptoPair) {
 		Price price = priceService.getLatestPriceByCryptoPair(cryptoPair);
-		System.out.println(price.toString());
 		return price;
 	}
 

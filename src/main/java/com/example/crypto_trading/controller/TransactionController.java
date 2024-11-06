@@ -17,7 +17,6 @@ import com.example.crypto_trading.exceptions.UserNotFoundException;
 import com.example.crypto_trading.model.Transaction;
 import com.example.crypto_trading.service.TransactionService;
 
-import jakarta.transaction.InvalidTransactionException;
 import jakarta.validation.Valid;
 
 @RestController
@@ -30,9 +29,7 @@ public class TransactionController {
 
 	@PostMapping
 	public Transaction createTransaction(@RequestBody @Valid TransactionRequest transactionRequest)
-			throws UserNotFoundException, InvalidTransactionException, InsufficientBalanceException {
-
-		System.out.println("POST createTransaction");
+			throws UserNotFoundException, InsufficientBalanceException {
 		return transactionService.createTransaction(transactionRequest);
 	}
 

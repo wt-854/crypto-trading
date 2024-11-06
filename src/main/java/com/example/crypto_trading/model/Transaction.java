@@ -14,6 +14,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,20 +33,22 @@ public class Transaction {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@NotNull
+	@NotNull(message = "User ID must not be empty")
 	private Long userId;
 
 	@NotNull
 	@ValidCryptoPair
 	private String cryptoPair;
 
-	@NotNull
+	@NotNull(message = "Amount must not be empty")
+	@Positive(message = "Amount must be positive")
 	private BigDecimal amount;
 
-	@NotNull
+	@NotNull(message = "Price must not be empty")
+	@Positive(message = "Price must be positive")
 	private BigDecimal price;
 
-	@NotNull
+	@NotNull(message = "TransactionType must not be empty")
 	@Enumerated(EnumType.STRING)
 	private TransactionType transactionType; // "BUY" or "SELL"
 

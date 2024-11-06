@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.crypto_trading.dto.TransactionRequest;
 import com.example.crypto_trading.enums.TransactionType;
@@ -13,8 +14,6 @@ import com.example.crypto_trading.exceptions.UserNotFoundException;
 import com.example.crypto_trading.model.Price;
 import com.example.crypto_trading.model.Transaction;
 import com.example.crypto_trading.repository.TransactionRepository;
-
-import jakarta.transaction.InvalidTransactionException;
 
 @Service
 public class TransactionService {
@@ -32,12 +31,10 @@ public class TransactionService {
 		return transactionRepository.findByUserId(userId);
 	}
 
+	@Transactional
 	public Transaction createTransaction(TransactionRequest transactionRequest)
-			throws UserNotFoundException, InsufficientBalanceException, InvalidTransactionException {
-
-		System.out.println("inside createTransaction");
+			throws UserNotFoundException, InsufficientBalanceException {
 		Price price = priceService.getLatestPriceByCryptoPair(transactionRequest.getCryptoPair());
-		System.out.println("price: " + price.toString());
 		// Update User Balance
 		if (transactionRequest.getTransactionType().equals(TransactionType.BUY)) {
 			userService.buyCrypto(transactionRequest.getUserId(), transactionRequest.getCryptoPair(),
@@ -45,10 +42,8 @@ public class TransactionService {
 
 		}
 		else if (transactionRequest.getTransactionType().equals(TransactionType.SELL)) {
-			throw new InvalidTransactionException();
-		}
-		else {
-			throw new InvalidTransactionException();
+			userService.sellCrypto(transactionRequest.getUserId(), transactionRequest.getCryptoPair(),
+					transactionRequest.getAmount().multiply(price.getBidPrice()), transactionRequest.getAmount());
 		}
 
 		// Add new transaction

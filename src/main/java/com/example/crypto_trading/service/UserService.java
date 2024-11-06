@@ -42,4 +42,27 @@ public class UserService {
 		return userRepository.save(user);
 	}
 
+	public User sellCrypto(Long userId, String cryptoPair, BigDecimal usdtAmount, BigDecimal cryptoAmount)
+			throws UserNotFoundException, InsufficientBalanceException {
+		if (cryptoAmount.compareTo(BigDecimal.ZERO) <= 0) {
+			throw new RuntimeException("Invalid crypto amount sold");
+		}
+
+		User user = getUserById(userId);
+		if (cryptoPair.equals("BTCUSDT")) {
+			if (user.getBtcusdtBalance().compareTo(cryptoAmount) < 0) {
+				throw new InsufficientBalanceException("Insufficient BTCUSDT balance");
+			}
+			user.setBtcusdtBalance(user.getBtcusdtBalance().subtract(cryptoAmount));
+		}
+		else if (cryptoPair.equals("ETHUSDT")) {
+			if (user.getEthusdtBalance().compareTo(cryptoAmount) < 0) {
+				throw new InsufficientBalanceException("Insufficient ETHUSDT balance");
+			}
+			user.setEthusdtBalance(user.getEthusdtBalance().subtract(cryptoAmount));
+		}
+		user.setUsdtBalance(user.getUsdtBalance().add(usdtAmount));
+		return userRepository.save(user);
+	}
+
 }

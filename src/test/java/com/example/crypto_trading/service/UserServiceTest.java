@@ -66,7 +66,6 @@ public class UserServiceTest {
 		user.setId(userId);
 		user.setUsdtBalance(new BigDecimal("500.00"));
 
-		// Mock the repository method
 		when(userRepository.findById(userId)).thenReturn(java.util.Optional.of(user));
 
 		InsufficientBalanceException exception = assertThrows(InsufficientBalanceException.class, () -> {
@@ -89,6 +88,66 @@ public class UserServiceTest {
 		});
 
 		assertEquals("Invalid crypto amount purchased", exception.getMessage());
+	}
+
+	@Test
+	public void testSellCryptoValidSale() throws UserNotFoundException, InsufficientBalanceException {
+		// Mock data
+		Long userId = 1L;
+		String cryptoPair = "BTCUSDT";
+		BigDecimal usdtAmount = new BigDecimal("1000.00");
+		BigDecimal cryptoAmount = new BigDecimal("0.1");
+
+		User user = new User();
+		user.setId(userId);
+		user.setUsdtBalance(new BigDecimal("5000.00"));
+		user.setBtcusdtBalance(new BigDecimal("1.0"));
+
+		when(userRepository.findById(userId)).thenReturn(java.util.Optional.of(user));
+		when(userRepository.save(user)).thenReturn(user);
+
+		User updatedUser = userService.sellCrypto(userId, cryptoPair, usdtAmount, cryptoAmount);
+
+		assertEquals(new BigDecimal("6000.00"), updatedUser.getUsdtBalance());
+		assertEquals(new BigDecimal("0.9"), updatedUser.getBtcusdtBalance());
+		verify(userRepository, times(1)).save(user);
+	}
+
+	@Test
+	public void testSellCryptoInsufficientCryptoBalance() {
+		// Mock data
+		Long userId = 1L;
+		String cryptoPair = "BTCUSDT";
+		BigDecimal usdtAmount = new BigDecimal("1000.00");
+		BigDecimal cryptoAmount = new BigDecimal("1.1");
+
+		User user = new User();
+		user.setId(userId);
+		user.setUsdtBalance(new BigDecimal("5000.00"));
+		user.setBtcusdtBalance(new BigDecimal("1.0"));
+
+		when(userRepository.findById(userId)).thenReturn(java.util.Optional.of(user));
+
+		InsufficientBalanceException exception = assertThrows(InsufficientBalanceException.class, () -> {
+			userService.sellCrypto(userId, cryptoPair, usdtAmount, cryptoAmount);
+		});
+
+		assertEquals("Insufficient BTCUSDT balance", exception.getMessage());
+	}
+
+	@Test
+	public void testSellCryptoInvalidCryptoAmount() {
+		// Mock data
+		Long userId = 1L;
+		String cryptoPair = "BTCUSDT";
+		BigDecimal usdtAmount = new BigDecimal("1000.00");
+		BigDecimal cryptoAmount = BigDecimal.ZERO;
+
+		RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+			userService.sellCrypto(userId, cryptoPair, usdtAmount, cryptoAmount);
+		});
+
+		assertEquals("Invalid crypto amount sold", exception.getMessage());
 	}
 
 }

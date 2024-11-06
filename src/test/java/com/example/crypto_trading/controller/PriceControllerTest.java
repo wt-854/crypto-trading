@@ -1,4 +1,4 @@
-package com.example.crypto_trading.service;
+package com.example.crypto_trading.controller;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +13,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-import com.example.crypto_trading.controller.PriceController;
 import com.example.crypto_trading.model.Price;
+import com.example.crypto_trading.service.PriceService;
 
 @WebMvcTest(PriceController.class)
 public class PriceControllerTest {
