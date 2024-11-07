@@ -25,7 +25,7 @@ public class PriceScheduler {
 	@Autowired
 	private RestTemplate restTemplate;
 
-	@Scheduled(fixedRate = 10000) // 10 seconds
+	@Scheduled(fixedRateString = "${scheduled.interval}")
 	public void fetchAndStorePrices() {
 		// Fetch prices from Binance
 		String binanceUrl = "https://api.binance.com/api/v3/ticker/bookTicker";
