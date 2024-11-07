@@ -1,9 +1,12 @@
 package com.example.crypto_trading.service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,8 +30,20 @@ public class TransactionService {
 	@Autowired
 	private PriceService priceService;
 
-	public List<Transaction> getTransactionsByUserId(Long userId) {
-		return transactionRepository.findByUserId(userId);
+	public Page<Transaction> getTransactionsByUserId(Long userId, LocalDateTime startDate, LocalDateTime endDate,
+			String sortOrder, int page, int pageSize) {
+
+		Sort sort = sortOrder.equalsIgnoreCase("desc") ? Sort.by(Sort.Order.desc("timestamp"))
+				: Sort.by(Sort.Order.asc("timestamp"));
+
+		Pageable pageable = PageRequest.of(page, pageSize, sort);
+
+		// If no date range, filter by userId
+		if (startDate == null && endDate == null) {
+			return transactionRepository.findByUserId(userId, pageable);
+		}
+
+		return transactionRepository.findByUserIdAndTimestampBetween(userId, startDate, endDate, pageable);
 	}
 
 	@Transactional
