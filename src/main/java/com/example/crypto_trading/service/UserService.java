@@ -28,15 +28,15 @@ public class UserService {
 			throw new RuntimeException("Invalid crypto amount purchased");
 		}
 		User user = getUserById(userId);
-		if (user.getUsdtBalance().compareTo(usdtAmount) < 0) {
+		if (user.getCryptoWallet().getUsdtBalance().compareTo(usdtAmount) < 0) {
 			throw new InsufficientBalanceException("Insufficient USDT balance");
 		}
-		user.setUsdtBalance(user.getUsdtBalance().subtract(usdtAmount));
+		user.getCryptoWallet().setUsdtBalance(user.getCryptoWallet().getUsdtBalance().subtract(usdtAmount));
 		if (cryptoPair.equals("BTCUSDT")) {
-			user.setBtcusdtBalance(user.getBtcusdtBalance().add(cryptoAmount));
+			user.getCryptoWallet().setBtcusdtBalance(user.getCryptoWallet().getBtcusdtBalance().add(cryptoAmount));
 		}
 		else if (cryptoPair.equals("ETHUSDT")) {
-			user.setEthusdtBalance(user.getEthusdtBalance().add(cryptoAmount));
+			user.getCryptoWallet().setEthusdtBalance(user.getCryptoWallet().getEthusdtBalance().add(cryptoAmount));
 		}
 
 		return userRepository.save(user);
@@ -50,18 +50,18 @@ public class UserService {
 
 		User user = getUserById(userId);
 		if (cryptoPair.equals("BTCUSDT")) {
-			if (user.getBtcusdtBalance().compareTo(cryptoAmount) < 0) {
+			if (user.getCryptoWallet().getBtcusdtBalance().compareTo(cryptoAmount) < 0) {
 				throw new InsufficientBalanceException("Insufficient BTCUSDT balance");
 			}
-			user.setBtcusdtBalance(user.getBtcusdtBalance().subtract(cryptoAmount));
+			user.getCryptoWallet().setBtcusdtBalance(user.getCryptoWallet().getBtcusdtBalance().subtract(cryptoAmount));
 		}
 		else if (cryptoPair.equals("ETHUSDT")) {
-			if (user.getEthusdtBalance().compareTo(cryptoAmount) < 0) {
+			if (user.getCryptoWallet().getEthusdtBalance().compareTo(cryptoAmount) < 0) {
 				throw new InsufficientBalanceException("Insufficient ETHUSDT balance");
 			}
-			user.setEthusdtBalance(user.getEthusdtBalance().subtract(cryptoAmount));
+			user.getCryptoWallet().setEthusdtBalance(user.getCryptoWallet().getEthusdtBalance().subtract(cryptoAmount));
 		}
-		user.setUsdtBalance(user.getUsdtBalance().add(usdtAmount));
+		user.getCryptoWallet().setUsdtBalance(user.getCryptoWallet().getUsdtBalance().add(usdtAmount));
 		return userRepository.save(user);
 	}
 

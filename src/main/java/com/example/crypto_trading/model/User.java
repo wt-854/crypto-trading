@@ -1,14 +1,11 @@
 package com.example.crypto_trading.model;
 
-import java.math.BigDecimal;
-
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,16 +27,7 @@ public class User {
 
 	private String username;
 
-	@NotNull(message = "USDT Balance must not be empty")
-	@DecimalMin(value = "0.0", inclusive = true, message = "USDT Balance cannot be negative")
-	private BigDecimal usdtBalance = new BigDecimal("50000.00");
-
-	@NotNull(message = "BTCUSDT Balance must not be empty")
-	@DecimalMin(value = "0.0", inclusive = true, message = "BTCUSDT Balance cannot be negative")
-	private BigDecimal btcusdtBalance = BigDecimal.ZERO;
-
-	@NotNull(message = "ETHUSDT Balance must not be empty")
-	@DecimalMin(value = "0.0", inclusive = true, message = "ETHUSDT Balance cannot be negative")
-	private BigDecimal ethusdtBalance = BigDecimal.ZERO;
+	@Embedded
+	private CryptoWallet cryptoWallet;
 
 }

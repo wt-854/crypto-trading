@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.example.crypto_trading.exceptions.InsufficientBalanceException;
 import com.example.crypto_trading.exceptions.UserNotFoundException;
+import com.example.crypto_trading.model.CryptoWallet;
 import com.example.crypto_trading.model.User;
 import com.example.crypto_trading.repository.UserRepository;
 
@@ -41,16 +42,17 @@ public class UserServiceTest {
 
 		User user = new User();
 		user.setId(userId);
-		user.setUsdtBalance(new BigDecimal("5000.00"));
-		user.setBtcusdtBalance(BigDecimal.ZERO);
+		user.setCryptoWallet(new CryptoWallet());
+		user.getCryptoWallet().setUsdtBalance(new BigDecimal("5000.00"));
+		user.getCryptoWallet().setBtcusdtBalance(BigDecimal.ZERO);
 
 		when(userRepository.findById(userId)).thenReturn(java.util.Optional.of(user));
 		when(userRepository.save(user)).thenReturn(user);
 
 		User updatedUser = userService.buyCrypto(userId, cryptoPair, usdtAmount, cryptoAmount);
 
-		assertEquals(new BigDecimal("4000.00"), updatedUser.getUsdtBalance());
-		assertEquals(new BigDecimal("0.1"), updatedUser.getBtcusdtBalance());
+		assertEquals(new BigDecimal("4000.00"), updatedUser.getCryptoWallet().getUsdtBalance());
+		assertEquals(new BigDecimal("0.1"), updatedUser.getCryptoWallet().getBtcusdtBalance());
 		verify(userRepository, times(1)).save(user);
 	}
 
@@ -64,7 +66,8 @@ public class UserServiceTest {
 
 		User user = new User();
 		user.setId(userId);
-		user.setUsdtBalance(new BigDecimal("500.00"));
+		user.setCryptoWallet(new CryptoWallet());
+		user.getCryptoWallet().setUsdtBalance(new BigDecimal("500.00"));
 
 		when(userRepository.findById(userId)).thenReturn(java.util.Optional.of(user));
 
@@ -100,16 +103,17 @@ public class UserServiceTest {
 
 		User user = new User();
 		user.setId(userId);
-		user.setUsdtBalance(new BigDecimal("5000.00"));
-		user.setBtcusdtBalance(new BigDecimal("1.0"));
+		user.setCryptoWallet(new CryptoWallet());
+		user.getCryptoWallet().setUsdtBalance(new BigDecimal("5000.00"));
+		user.getCryptoWallet().setBtcusdtBalance(new BigDecimal("1.0"));
 
 		when(userRepository.findById(userId)).thenReturn(java.util.Optional.of(user));
 		when(userRepository.save(user)).thenReturn(user);
 
 		User updatedUser = userService.sellCrypto(userId, cryptoPair, usdtAmount, cryptoAmount);
 
-		assertEquals(new BigDecimal("6000.00"), updatedUser.getUsdtBalance());
-		assertEquals(new BigDecimal("0.9"), updatedUser.getBtcusdtBalance());
+		assertEquals(new BigDecimal("6000.00"), updatedUser.getCryptoWallet().getUsdtBalance());
+		assertEquals(new BigDecimal("0.9"), updatedUser.getCryptoWallet().getBtcusdtBalance());
 		verify(userRepository, times(1)).save(user);
 	}
 
@@ -123,8 +127,9 @@ public class UserServiceTest {
 
 		User user = new User();
 		user.setId(userId);
-		user.setUsdtBalance(new BigDecimal("5000.00"));
-		user.setBtcusdtBalance(new BigDecimal("1.0"));
+		user.setCryptoWallet(new CryptoWallet());
+		user.getCryptoWallet().setUsdtBalance(new BigDecimal("5000.00"));
+		user.getCryptoWallet().setBtcusdtBalance(new BigDecimal("1.0"));
 
 		when(userRepository.findById(userId)).thenReturn(java.util.Optional.of(user));
 

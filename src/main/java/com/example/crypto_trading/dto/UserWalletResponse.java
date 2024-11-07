@@ -1,6 +1,6 @@
 package com.example.crypto_trading.dto;
 
-import java.math.BigDecimal;
+import com.example.crypto_trading.model.CryptoWallet;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,10 +17,6 @@ public class UserWalletResponse {
 
 	private String username;
 
-	private BigDecimal usdtBalance;
-
-	private BigDecimal btcusdtBalance;
-
-	private BigDecimal ethusdtBalance;
+	private CryptoWallet cryptoWallet;
 
 }

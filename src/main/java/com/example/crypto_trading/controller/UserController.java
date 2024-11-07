@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.crypto_trading.dto.UserWalletResponse;
 import com.example.crypto_trading.exceptions.UserNotFoundException;
+import com.example.crypto_trading.model.CryptoWallet;
 import com.example.crypto_trading.model.User;
 import com.example.crypto_trading.service.UserService;
 
@@ -21,8 +22,9 @@ public class UserController {
 	@GetMapping("/{userId}/balance")
 	public UserWalletResponse getUserBalance(@PathVariable Long userId) throws UserNotFoundException {
 		User user = userService.getUserById(userId);
-		UserWalletResponse userWallet = new UserWalletResponse(user.getUsername(), user.getUsdtBalance(),
-				user.getBtcusdtBalance(), user.getEthusdtBalance());
+		UserWalletResponse userWallet = new UserWalletResponse(user.getUsername(),
+				new CryptoWallet(user.getCryptoWallet().getUsdtBalance(), user.getCryptoWallet().getBtcusdtBalance(),
+						user.getCryptoWallet().getEthusdtBalance()));
 		return userWallet;
 	}
 
