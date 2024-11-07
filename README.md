@@ -67,7 +67,6 @@ Represent a user's buy/sell order
 
 ---
 
-
 ## APIs
 | API Endpoint | HTTP Method | Parameters | Description | Sample Response |
 | --- | --- | --- | --- | --- |
